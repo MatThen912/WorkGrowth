@@ -1,0 +1,679 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WorkGrowth HRMS | Attendance, leave and claims in one place</title>
+  <meta name="description" content="WorkGrowth HRMS brings attendance, leave, claims, overtime, mileage and reporting into one platform for web and mobile. By WorkGrowth Technology Sdn. Bhd., Malaysia.">
+  <meta name="theme-color" content="#0b2545">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Cpath d='M7 10l3.5 12L16 12l5.5 10L25 10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --navy: #0b2545;
+      --text: #14243b;
+      --muted: #4a5a70;
+      --teal: #0f766e;
+      --teal-dark: #0b5d57;
+      --teal-soft: #e7f4f2;
+      --line: #e3e8ef;
+      --bg-alt: #f6f8fb;
+      --radius: 10px;
+      --header-h: 68px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-padding-top: calc(var(--header-h) + 16px); }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
+    }
+
+    body {
+      margin: 0;
+      background: #fff;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3 { color: var(--navy); line-height: 1.2; margin: 0; }
+    p { margin: 0; }
+    a { color: var(--teal); }
+    ul, ol { margin: 0; padding: 0; list-style: none; }
+    svg { flex-shrink: 0; }
+
+    :focus-visible {
+      outline: 3px solid var(--teal);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -100px;
+      z-index: 100;
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 12px; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 8px;
+      border: 1.5px solid transparent;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color .15s, border-color .15s, color .15s;
+    }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-primary:hover { background: var(--teal-dark); }
+    .btn-secondary { background: #fff; color: var(--navy); border-color: #c9d2de; }
+    .btn-secondary:hover { border-color: var(--navy); }
+    .btn-sm { min-height: 40px; padding: 0 16px; font-size: .9375rem; }
+
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      height: var(--header-h);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--navy);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      background: var(--teal);
+    }
+    .site-nav { display: flex; align-items: center; gap: 32px; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a {
+      color: var(--text);
+      font-size: .9688rem;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 6px 0;
+    }
+    .nav-links a:hover { color: var(--teal); }
+    .menu-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      margin-right: -8px;
+      background: none;
+      border: 0;
+      border-radius: 8px;
+      color: var(--navy);
+      cursor: pointer;
+    }
+    .menu-toggle .icon-close { display: none; }
+    .menu-toggle[aria-expanded="true"] .icon-open { display: none; }
+    .menu-toggle[aria-expanded="true"] .icon-close { display: block; }
+
+    /* Hero */
+    .hero { padding: 80px 0 96px; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      gap: 64px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: var(--teal);
+      font-size: .875rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2.25rem, 4.6vw, 3.5rem);
+      letter-spacing: -.025em;
+      line-height: 1.08;
+    }
+    .hero-lead {
+      margin-top: 22px;
+      max-width: 34ch;
+      color: var(--muted);
+      font-size: 1.1875rem;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .hero-note { margin-top: 20px; color: var(--muted); font-size: .9375rem; }
+
+    /* Sample interface */
+    .mock { margin: 0; }
+    .mock-window {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 1px 2px rgba(11, 37, 69, .05), 0 12px 32px -8px rgba(11, 37, 69, .14);
+      overflow: hidden;
+      font-size: .875rem;
+      line-height: 1.45;
+    }
+    .mock-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-alt);
+    }
+    .mock-app { font-weight: 700; color: var(--navy); }
+    .mock-label {
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px dashed #9aa8ba;
+      color: var(--muted);
+      font-size: .75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .mock-body { display: grid; gap: 14px; padding: 18px; }
+    .mock-panel { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+    .mock-panel-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .mock-panel-title { color: var(--navy); font-weight: 700; }
+    .mock-panel-meta { color: var(--muted); font-size: .8125rem; }
+    .clock-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .status-dot { width: 9px; height: 9px; border-radius: 50%; background: #16a34a; }
+    .clock-row strong { color: var(--navy); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .stat { background: var(--bg-alt); border-radius: 8px; padding: 8px 10px; }
+    .stat b { display: block; color: var(--navy); font-size: 1.125rem; }
+    .stat span { color: var(--muted); font-size: .75rem; }
+    .mock-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 0;
+      border-top: 1px solid var(--line);
+    }
+    .mock-list li:first-child { border-top: 0; padding-top: 2px; }
+    .mock-list .who { color: var(--navy); font-weight: 600; }
+    .mock-list .what { display: block; color: var(--muted); font-size: .8125rem; }
+    .chip {
+      flex-shrink: 0;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .chip-pending { background: #fff4de; color: #7a4b00; }
+    .chip-approved { background: var(--teal-soft); color: var(--teal-dark); }
+    .mock-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .mock figcaption,
+    .mock-caption { margin-top: 12px; color: var(--muted); font-size: .8125rem; text-align: center; }
+
+    /* Sections */
+    .section { padding: 96px 0; }
+    .section-alt { background: var(--bg-alt); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section-head { max-width: 640px; margin-bottom: 56px; }
+    .section-head h2 { font-size: clamp(1.75rem, 3vw, 2.375rem); letter-spacing: -.02em; }
+    .section-head p { margin-top: 16px; color: var(--muted); font-size: 1.125rem; }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 48px;
+      row-gap: 44px;
+    }
+    .feature { padding-top: 22px; border-top: 1px solid var(--line); }
+    .feature-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin-bottom: 16px;
+      border-radius: 9px;
+      background: var(--teal-soft);
+      color: var(--teal);
+    }
+    .feature h3 { font-size: 1.1875rem; }
+    .feature p { margin-top: 8px; color: var(--muted); }
+
+    /* Steps */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 32px;
+      counter-reset: step;
+    }
+    .step { position: relative; }
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-weight: 700;
+    }
+    .step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 20px;
+      left: 56px;
+      right: -16px;
+      height: 1px;
+      background: #c9d2de;
+    }
+    .step h3 { font-size: 1.1875rem; }
+    .step p { margin-top: 8px; color: var(--muted); }
+
+    /* About */
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 64px;
+      align-items: start;
+    }
+    .about-grid h2 { font-size: clamp(1.75rem, 3vw, 2.375rem); letter-spacing: -.02em; }
+    .about-text p { color: var(--muted); font-size: 1.125rem; }
+    .about-text p + p { margin-top: 16px; }
+    .focus-list { margin-top: 32px; display: grid; gap: 14px; }
+    .focus-list li { display: flex; gap: 12px; align-items: flex-start; color: var(--text); }
+    .focus-list svg { margin-top: 3px; color: var(--teal); }
+
+    /* Contact */
+    .contact { text-align: center; }
+    .contact h2 { font-size: clamp(1.875rem, 3.4vw, 2.625rem); letter-spacing: -.02em; }
+    .contact p { max-width: 520px; margin: 16px auto 0; color: var(--muted); font-size: 1.125rem; }
+    .contact .btn { margin-top: 32px; }
+    .contact-email { margin-top: 18px; font-size: 1rem; }
+    .contact-email a { font-weight: 600; }
+
+    /* Footer */
+    .site-footer { padding: 36px 0; border-top: 1px solid var(--line); font-size: .9375rem; color: var(--muted); }
+    .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 32px; }
+    .footer-company { color: var(--navy); font-weight: 600; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+    .footer-links a { color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--teal); text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .hero { padding: 56px 0 72px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero-lead { max-width: 46ch; }
+      .features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .about-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    @media (max-width: 860px) {
+      .menu-toggle { display: inline-flex; }
+      .site-nav { display: none; }
+      .site-header.is-open .site-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        padding: 8px 24px 24px;
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 12px 24px -12px rgba(11, 37, 69, .18);
+      }
+      .site-header.is-open .nav-links { flex-direction: column; gap: 0; }
+      .site-header.is-open .nav-links a {
+        display: block;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 1.0625rem;
+      }
+      .site-header.is-open .site-nav .btn { margin-top: 12px; min-height: 48px; }
+    }
+
+    @media (max-width: 720px) {
+      .section { padding: 72px 0; }
+      .section-head { margin-bottom: 40px; }
+      .steps { grid-template-columns: 1fr; gap: 36px; }
+      .step:not(:last-child)::after { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 16px; }
+      .site-header.is-open .site-nav { padding-left: 16px; padding-right: 16px; }
+      .hero-actions .btn { flex: 1 1 100%; }
+      .features { grid-template-columns: 1fr; row-gap: 32px; }
+      .mock-body { padding: 14px; gap: 12px; }
+      .mock-split { grid-template-columns: 1fr; gap: 12px; }
+      .contact .btn { width: 100%; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="WorkGrowth, back to top">
+        <span class="brand-mark" aria-hidden="true"></span>WorkGrowth
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <svg class="icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn-primary btn-sm" href="#contact">Request a Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">WorkGrowth HRMS</span>
+          <h1 id="hero-title">Manage your people, wherever work happens.</h1>
+          <p class="hero-lead">Bring attendance, leave, claims and everyday HR tasks into one connected platform.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact">Request a Demo</a>
+            <a class="btn btn-secondary" href="#features">Explore Features</a>
+          </div>
+          <p class="hero-note">Available on the web and on mobile.</p>
+        </div>
+
+        <!-- Illustrative mock-up built in HTML/CSS. Not a product screenshot; all records are sample data. -->
+        <figure class="mock" aria-label="Sample interface showing attendance, leave requests and claims with example data">
+          <div class="mock-window">
+            <div class="mock-bar">
+              <span class="mock-app">WorkGrowth HRMS</span>
+              <span class="mock-label">Sample interface</span>
+            </div>
+            <div class="mock-body">
+              <div class="mock-panel">
+                <div class="mock-panel-head">
+                  <span class="mock-panel-title">Attendance</span>
+                  <span class="mock-panel-meta">Today</span>
+                </div>
+                <div class="clock-row">
+                  <span class="status-dot" aria-hidden="true"></span>
+                  <span><strong>Clocked in at 08:52</strong> &middot; Head office</span>
+                </div>
+                <div class="stats">
+                  <div class="stat"><b>42</b><span>Present</span></div>
+                  <div class="stat"><b>3</b><span>On leave</span></div>
+                  <div class="stat"><b>3</b><span>Not yet in</span></div>
+                </div>
+              </div>
+
+              <div class="mock-split">
+                <div class="mock-panel">
+                  <div class="mock-panel-head">
+                    <span class="mock-panel-title">Leave requests</span>
+                    <span class="mock-panel-meta">2 pending</span>
+                  </div>
+                  <ul class="mock-list">
+                    <li>
+                      <span><span class="who">Aisyah R.</span><span class="what">Annual &middot; 2 days</span></span>
+                      <span class="chip chip-pending">Pending</span>
+                    </li>
+                    <li>
+                      <span><span class="who">Daniel T.</span><span class="what">Medical &middot; 1 day</span></span>
+                      <span class="chip chip-pending">Pending</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="mock-panel">
+                  <div class="mock-panel-head">
+                    <span class="mock-panel-title">Claims</span>
+                    <span class="mock-panel-meta">This week</span>
+                  </div>
+                  <ul class="mock-list">
+                    <li>
+                      <span><span class="who">Parking</span><span class="what">RM 18.00</span></span>
+                      <span class="chip chip-pending">Pending</span>
+                    </li>
+                    <li>
+                      <span><span class="who">Client lunch</span><span class="what">RM 86.50</span></span>
+                      <span class="chip chip-approved">Approved</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <figcaption>Sample interface for illustration. Names and figures are example data.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section section-alt" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="features-title">Everyday HR, without the paperwork</h2>
+          <p>Cut down on repetitive admin. Employees submit requests in a few steps, and supervisors can approve them on time, from wherever they are.</p>
+        </div>
+
+        <ul class="features">
+          <li class="feature">
+            <span class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <h3>Attendance</h3>
+            <p>Employees clock in and out from the web or their phone, so you always know who is at work.</p>
+          </li>
+          <li class="feature">
+            <span class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            </span>
+            <h3>Leave</h3>
+            <p>Staff apply for leave online, and managers approve or decline without forms changing hands.</p>
+          </li>
+          <li class="feature">
+            <span class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>
+            </span>
+            <h3>Claims</h3>
+            <p>Submit expense claims in one place and follow each one from submission to approval.</p>
+          </li>
+          <li class="feature">
+            <span class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>
+            </span>
+            <h3>Overtime</h3>
+            <p>Request and approve overtime with a clear record of the extra hours each person works.</p>
+          </li>
+          <li class="feature">
+            <span class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7.5a3.5 3.5 0 0 0 0-7h-7a3.5 3.5 0 0 1 0-7H16"/></svg>
+            </span>
+            <h3>Mileage</h3>
+            <p>Declare work-related travel distance without keeping a separate spreadsheet.</p>
+          </li>
+          <li class="feature">
+            <span class="feature-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11M10 20V5M16 20v-6M21 20H3"/></svg>
+            </span>
+            <h3>Reporting</h3>
+            <p>Give management a clear view of attendance, requests and day-to-day team activity.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how-it-works" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="how-title">How it works</h2>
+          <p>One simple flow for every request, from the person who submits it to the team that keeps the records.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step-num" aria-hidden="true">1</span>
+            <h3>Employees submit</h3>
+            <p>Staff send leave, claims, overtime and mileage requests from the web or their phone.</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">2</span>
+            <h3>Managers review</h3>
+            <p>Supervisors see what is waiting for them, check the details and approve or decline.</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">3</span>
+            <h3>HR stays informed</h3>
+            <p>HR sees every record and report in one place, with no paperwork to chase.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section section-alt" id="about" aria-labelledby="about-title">
+      <div class="container about-grid">
+        <div>
+          <span class="eyebrow">About us</span>
+          <h2 id="about-title">HR software built in Malaysia</h2>
+        </div>
+        <div class="about-text">
+          <p>WorkGrowth Technology Sdn. Bhd. is a Malaysian HR software company and the team behind WorkGrowth HRMS.</p>
+          <p>We focus on the routine work of running a team: recording attendance, handling requests and keeping approvals moving, whether people are in the office, on site or on the road.</p>
+          <ul class="focus-list">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+              <span>Everyday HR processes, made simpler</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+              <span>Smoother collaboration between employees, managers and HR</span>
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>
+              <span>Built for teams that work on the move</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <h2 id="contact-title">See how WorkGrowth fits your team.</h2>
+        <p>Email us to arrange a demo of WorkGrowth HRMS. Let us know a little about your organisation and how your team works.</p>
+        <a class="btn btn-primary" href="mailto:hello@workgrowth.digital?subject=WorkGrowth%20HRMS%20Demo%20Request">Request a Demo by Email</a>
+        <p class="contact-email">Or write to <a href="mailto:hello@workgrowth.digital">hello@workgrowth.digital</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-company">WorkGrowth Technology Sdn. Bhd.</div>
+        <div>Malaysia &middot; &copy; <span id="year">2026</span></div>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#about">About</a>
+        <a href="mailto:hello@workgrowth.digital">hello@workgrowth.digital</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.site-header');
+      var toggle = document.querySelector('.menu-toggle');
+
+      function setOpen(open) {
+        header.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      }
+
+      toggle.addEventListener('click', function () {
+        setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+      });
+
+      // Close after choosing a link in the mobile menu.
+      document.getElementById('site-nav').addEventListener('click', function (e) {
+        if (e.target.closest('a')) setOpen(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && header.classList.contains('is-open')) {
+          setOpen(false);
+          toggle.focus();
+        }
+      });
+
+      document.getElementById('year').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
